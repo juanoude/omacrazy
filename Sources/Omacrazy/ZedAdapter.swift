@@ -42,6 +42,10 @@ enum ZedAdapter {
         return "installed '\(theme.selectableName)' locally and selected it in settings.json"
     }
 
+    static func hasTheme(themeRoot: URL) throws -> Bool {
+        try discoverTheme(in: themeRoot) != nil
+    }
+
     private static func discoverTheme(in themeRoot: URL) throws -> LocalTheme? {
         let fileManager = FileManager.default
         let extensionDirectory = themeRoot.appendingPathComponent("zed/themes", isDirectory: true)

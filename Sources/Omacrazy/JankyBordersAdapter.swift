@@ -61,7 +61,7 @@ enum JankyBordersAdapter {
     private static let beginMarker = "# BEGIN OMACRAZY THEME"
     private static let endMarker = "# END OMACRAZY THEME"
 
-    static func apply(colors: HyprlandBorderColors) throws -> String {
+    static func apply(activeColor: String) throws -> String {
         let fileManager = FileManager.default
         let home = fileManager.homeDirectoryForCurrentUser
         let configFile: URL
@@ -87,7 +87,7 @@ enum JankyBordersAdapter {
         }
 
         let withoutManagedBlock = removingManagedBlock(from: original)
-        let command = "borders 'active_color=\(colors.jankyBordersValue)'"
+        let command = "borders 'active_color=\(activeColor)'"
         let block = "\(beginMarker)\n\(command)\n\(endMarker)"
         let separator = withoutManagedBlock.isEmpty || withoutManagedBlock.hasSuffix("\n") ? "" : "\n"
         try atomicWrite(withoutManagedBlock + separator + block + "\n", to: configFile, isNewScript: !existing)
@@ -101,7 +101,7 @@ enum JankyBordersAdapter {
 
         let process = Process()
         process.executableURL = executable
-        process.arguments = ["active_color=\(colors.jankyBordersValue)"]
+        process.arguments = ["active_color=\(activeColor)"]
         let errorPipe = Pipe()
         process.standardError = errorPipe
         try process.run()

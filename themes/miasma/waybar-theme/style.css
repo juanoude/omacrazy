@@ -1,0 +1,190 @@
+/* ========================================================================== */
+/* Imports */
+/* ========================================================================== */
+@import "../omarchy/current/theme/waybar.css";
+
+/* ========================================================================== */
+/* Color Variables */
+/* ========================================================================== */
+@define-color accent-alert shade(@foreground, 0.7);
+@define-color border-accent #78824b;
+
+/* ========================================================================== */
+/* Base */
+/* ========================================================================== */
+* {
+  border: none;
+  font-family: 'CaskaydiaMono Nerd Font Propo';
+  font-size: 13px;
+  min-height: 0;
+}
+
+window#waybar {
+  background: transparent;
+  color: @foreground;
+}
+
+/* ========================================================================== */
+/* Containers */
+/* ========================================================================== */
+.modules-left,
+.modules-right,
+.modules-center {
+  border: 2px solid @border-accent;
+  background-color: @background;
+  box-shadow: 1px 1px 3px 2px alpha(#000000, 0.8);
+}
+
+.modules-left {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+#clock {
+  border: 2px solid @border-accent;
+  background-color: @background;
+  box-shadow: 1px 1px 3px 2px alpha(#000000, 0.8);
+}
+
+#hyprland-window,
+#window {
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  color: #d7c483;
+}
+
+/* ========================================================================== */
+/* Modules */
+/* ========================================================================== */
+#custom-omarchy {
+  font-size: 13px;
+}
+
+#custom-update {
+  font-size: 13px;
+}
+
+#custom-screenrecording-indicator {
+  font-size: 13px;
+}
+
+#custom-screenrecording-indicator.active {
+  color: @accent-alert;
+}
+
+#hyprland-window,
+#tray,
+#cpu,
+#memory,
+#battery,
+#network,
+#bluetooth,
+#pulseaudio,
+#custom-omarchy,
+#backlight,
+#custom-updatespacman,
+#custom-screenrecording-indicator,
+#custom-update {
+  min-width: 12px;
+}
+
+/* ========================================================================== */
+/* Workspaces */
+/* ========================================================================== */
+#workspaces {
+  background-color: alpha(@foreground, 0.3);
+  opacity: 0.95;
+}
+
+#workspaces button {
+  background-color: alpha(@foreground, 1);
+  color: @background;
+  transition: all 0.3s ease-in-out;
+  opacity: 0.6;
+  font-size: 10px;
+}
+
+#workspaces button.active {
+  color: @foreground;
+  background-color: @background;
+  min-width: 30px;
+  opacity: 1.0;
+}
+
+#workspaces button:hover {
+  color: @foreground;
+  background: @background;
+  min-width: 30px;
+  opacity: 0.9;
+}
+
+#workspaces button.empty {
+  opacity: 0.2;
+}
+
+/* ========================================================================== */
+/* Utility */
+/* ========================================================================== */
+.hidden {
+  opacity: 0;
+}
+
+tooltip {
+  opacity: 0.95;
+  background: @background;
+  font-size: 9px;
+  border: 2px solid @border-accent;
+}
+
+tooltip label {
+  color: @foreground;
+}
+
+/* ========================================================================== */
+/* Spacing (Margins & Padding) */
+/* ========================================================================== */
+.modules-left,
+.modules-right,
+.modules-center {
+  margin: 6px 8px 6px 8px;
+  padding: 1px;
+}
+
+#workspaces {
+  padding: 1px;
+}
+
+#workspaces button {
+  padding: 0 8px;
+  margin: 2px;
+}
+
+#hyprland-window,
+#tray,
+#cpu,
+#memory,
+#battery,
+#network,
+#bluetooth,
+#pulseaudio,
+#custom-omarchy,
+#backlight,
+#custom-updatespacman,
+#custom-screenrecording-indicator,
+#custom-update,
+#custom-expand-icon,
+#tray-expander,
+#idle_inhibitor {
+  margin: 0 8px;
+}
+
+#clock {
+  margin: 0 10px 0 0px;
+  padding: 6px 10px;
+}
+
+tooltip {
+  padding: 4px;
+}

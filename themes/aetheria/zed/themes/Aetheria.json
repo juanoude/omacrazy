@@ -57,7 +57,7 @@
         "editor.background": "#0e091df2",
         "editor.gutter.background": "#0e091df2",
         "editor.subheader.background": "#0e091df2",
-        "editor.active_line.background": "#c53253",
+        "editor.active_line.background": "#c5325366",
         "editor.highlighted_line.background": null,
         "editor.line_number": "#c53253",
         "editor.active_line_number": "#11aeb3",
@@ -140,7 +140,7 @@
         "players": [
           {
             "cursor": "#14b9b5",
-            "selection": "#0e091d",
+            "selection": "#c5325366",
             "background": null
           }
         ],

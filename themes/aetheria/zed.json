@@ -21,7 +21,7 @@
             "ghost_element.active": "#c5325360",
             "border": "#000000",
             "editor.highlighted_line.background": "#c5325310",
-            "editor.active_line.background": "#c5325310",
+            "editor.active_line.background": "#c5325366",
             "panel.background": "#00000090",
             "title_bar.background": "#00000090",
             "title_bar.inactive_background": "#00000090",
@@ -96,7 +96,7 @@
               {
                 "cursor": "#14B9B5",
                 "background": "#000000",
-                "selection": "#14B9B530"
+                "selection": "#c5325366"
               }
             ]
           }
