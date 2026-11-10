@@ -18,7 +18,11 @@ To build and install the `omacrazy` command in `~/.local/bin`, run:
 ./install.sh
 ```
 
-The install directory can be changed with `OMACRAZY_INSTALL_DIR`, for example `OMACRAZY_INSTALL_DIR="$HOME/bin" ./install.sh`. Add that directory to `PATH` if the installer reports that it is missing. To uninstall, remove the installed executable with `rm "$HOME/.local/bin/omacrazy"` (or the corresponding path if you changed the install directory).
+The installer also copies theme files to `~/.config/omacrazy/themes/<name>/`. It includes the inputs used by the current adapters and inference (`colors.toml`, `alacritty.toml`, `hyprland.conf`, `ghostty.conf`, `jankyborders.conf`, `zed.json`, JSON files in `zed/themes/`, and supported images in `backgrounds/`), plus license notices. Unused app configs, previews, scripts, and Git files are omitted. Source files stay in the checkout. Reinstalling updates these files, preserving replaced content once as `.omacrazy-backup`, and keeps themes added directly to the installed collection.
+
+The command uses the installed theme directory from any working directory, including for `theme add` and `theme infer`. Before installation, it falls back to the checkout’s `themes/` directory.
+
+The executable install directory can be changed with `OMACRAZY_INSTALL_DIR`, for example `OMACRAZY_INSTALL_DIR="$HOME/bin" ./install.sh`. Add that directory to `PATH` if the installer reports that it is missing. To uninstall, remove `~/.config/omacrazy` and the installed executable with `rm "$HOME/.local/bin/omacrazy"` (or the corresponding path if you changed the install directory).
 
 To add a theme from a GitHub repository, run:
 
@@ -26,7 +30,7 @@ To add a theme from a GitHub repository, run:
 swift run omacrazy theme add https://github.com/bjarneo/omarchy-futurism-theme futurism
 ```
 
-Omacrazy checks out the repository into a temporary directory, then copies its contents into `themes/<name>/`. Git metadata and Git-only files (`.git`, `.gitignore`, `.gitattributes`, and `.gitmodules`) are omitted. The destination name must contain only letters, numbers, hyphens, or underscores, and an existing theme is never overwritten. Git must be installed, and the command needs network access to GitHub.
+Omacrazy checks out the repository into a temporary directory, then copies its contents into the active theme directory (`~/.config/omacrazy/themes/<name>/` after installation). Git metadata and Git-only files (`.git`, `.gitignore`, `.gitattributes`, and `.gitmodules`) are omitted. The destination name must contain only letters, numbers, hyphens, or underscores, and an existing theme is never overwritten. Git must be installed, and the command needs network access to GitHub.
 
 When `colors.toml` is missing and `alacritty.toml` exists, applying a theme or inferring an app config creates the palette first. Existing palettes are preserved, including previously generated ones. The fallback reads Alacritty's primary colors, 16 normal/bright ANSI colors, cursor, and selection; it resolves `CellBackground`/`CellForeground` references and omits `None` values. It supports color assignments in TOML sections or dotted keys, with quoted hex values and optional inline comments. Alacritty imports and inline tables are not expanded. A valid primary background and foreground are required.
 
@@ -62,7 +66,7 @@ omacrazy theme infer futurism jankyborders
 
 Inference prefers `hyprland.conf`, converting its active border color or gradient. If that file is absent, it randomly chooses the `accent`, `foreground`, or a gradient between them from `colors.toml`. If only one valid color is available, it uses that color. It creates `themes/futurism/jankyborders.conf`. On every theme application, infer-generated JankyBorders files are regenerated from the available source before applying; a hand-authored file is preserved. If the theme has no JankyBorders file or source palette/config, JankyBorders is skipped. Theme application does not parse `hyprland.conf` itself.
 
-Themes are stored in `themes/<name>/`. A target is skipped when its theme-specific file is missing. Each adapter runs independently, so one failure does not prevent the other targets from being attempted.
+Installed themes are stored in `~/.config/omacrazy/themes/<name>/`; the checkout keeps its source collection in `themes/<name>/`. A target is skipped when its theme-specific file is missing. Each adapter runs independently, so one failure does not prevent the other targets from being attempted.
 
 ## Current adapters
 
@@ -106,4 +110,7 @@ Run the test suite with:
 
 ```sh
 swift test
+python3 Tests/test_install.py
 ```
+
+The installer check uses an isolated temporary home and a fake build; it does not change app settings.

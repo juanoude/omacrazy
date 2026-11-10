@@ -543,43 +543,47 @@ enum ThemeImporter {
 }
 
 enum ThemeLocator {
-    static func themesDirectory() throws -> URL {
+    static var installedThemesDirectory: URL {
+        FileManager.default.homeDirectoryForCurrentUser
+            .appendingPathComponent(".config/omacrazy/themes", isDirectory: true)
+    }
+
+    static func themesDirectory(
+        installedDirectory: URL = installedThemesDirectory,
+        searchStarts: [URL] = [
+            URL(fileURLWithPath: FileManager.default.currentDirectoryPath, isDirectory: true),
+            URL(fileURLWithPath: CommandLine.arguments[0]).standardizedFileURL.deletingLastPathComponent()
+        ]
+    ) throws -> URL {
         let fileManager = FileManager.default
-        let candidates = [URL(fileURLWithPath: fileManager.currentDirectoryPath)] +
-            [URL(fileURLWithPath: CommandLine.arguments[0]).standardizedFileURL]
-        for start in candidates {
+        func isDirectory(_ url: URL) -> Bool {
+            var directory: ObjCBool = false
+            return fileManager.fileExists(atPath: url.path, isDirectory: &directory) && directory.boolValue
+        }
+        if isDirectory(installedDirectory) { return installedDirectory }
+
+        // Allow development from a checkout before the first installation.
+        for start in searchStarts {
             var directory = start
-            if !directory.hasDirectoryPath { directory.deleteLastPathComponent() }
             while true {
                 let candidate = directory.appendingPathComponent("themes", isDirectory: true)
-                if fileManager.fileExists(atPath: candidate.path) { return candidate }
+                if isDirectory(candidate) { return candidate }
                 let parent = directory.deletingLastPathComponent()
                 if parent.path == directory.path { break }
                 directory = parent
             }
         }
-        throw OmacrazyError(description: "could not find a themes/ directory; run this command from the project")
+        throw OmacrazyError(description: "could not find themes at \(installedDirectory.path); run ./install.sh from the project")
     }
 
     static func findTheme(named name: String) throws -> URL {
-        let fileManager = FileManager.default
-        let candidates = [URL(fileURLWithPath: fileManager.currentDirectoryPath)] +
-            [URL(fileURLWithPath: CommandLine.arguments[0]).standardizedFileURL]
-
-        for start in candidates {
-            var directory = start
-            if !directory.hasDirectoryPath { directory.deleteLastPathComponent() }
-            while true {
-                let candidate = directory.appendingPathComponent("themes", isDirectory: true)
-                    .appendingPathComponent(name, isDirectory: true)
-                if fileManager.fileExists(atPath: candidate.path) { return candidate }
-                let parent = directory.deletingLastPathComponent()
-                if parent.path == directory.path { break }
-                directory = parent
-            }
+        let directory = try themesDirectory()
+        let candidate = directory.appendingPathComponent(name, isDirectory: true)
+        var isDirectory: ObjCBool = false
+        guard FileManager.default.fileExists(atPath: candidate.path, isDirectory: &isDirectory), isDirectory.boolValue else {
+            throw OmacrazyError(description: "theme '\(name)' not found in \(directory.path)")
         }
-
-        throw OmacrazyError(description: "theme '\(name)' not found under a themes/ directory")
+        return candidate
     }
 }
 
